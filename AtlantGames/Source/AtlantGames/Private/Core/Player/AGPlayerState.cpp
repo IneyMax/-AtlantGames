@@ -16,7 +16,7 @@ void AAGPlayerState::IncreaseScore_Implementation(const int32 InAddScore)
 	}
 }
 
-void AAGPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+void AAGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 

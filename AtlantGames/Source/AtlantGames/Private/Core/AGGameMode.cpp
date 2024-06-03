@@ -23,6 +23,9 @@ AAGGameMode::AAGGameMode(const FObjectInitializer& ObjectInitializer)
 }
 
 #if WITH_EDITOR
+/*
+ * Remove empty items
+ */
 void AAGGameMode::PreSave(FObjectPreSaveContext SaveContext)
 {
 	for (auto It = AllowedPickups.CreateIterator(); It; ++It)
@@ -81,6 +84,7 @@ void AAGGameMode::HandleMatchHasEnded()
 	{
 		if (APlayerController* PC = Iterator->Get())
 		{
+			PC->GetPawn()->DisableInput(PC);
 			PC->GameHasEnded(EndGameFocus, PC->GetPlayerState<AAGPlayerState>()->GetCurrentScore() >= NumPurposePickup);
 		}
 	}
@@ -115,7 +119,6 @@ AActor* AAGGameMode::ChoosePlayerStart_Implementation(AController* Player)
 		APlayerStart* PlayerStart = *It;
 		if (PlayerStart->IsA<APlayerStartPIE>())
 		{
-			// Always prefer the first "Play from Here" PlayerStart, if we find one while in PIE mode
 			FoundPlayerStart = PlayerStart;
 			break;
 		}
@@ -181,17 +184,12 @@ bool AAGGameMode::ReadyToStartMatch_Implementation()
 	return false;
 }
 
-bool AAGGameMode::ReadyToEndMatch_Implementation()
-{
-	return TotalScore >= NumPurposePickup || CurrentGameSessionTime <= 0;
-}
-
-void AAGGameMode::OnTotalScoreUpdate(int32 NewTotalScore)
+void AAGGameMode::OnTotalScoreUpdate(const int32 NewTotalScore)
 {
 	TotalScore = NewTotalScore;
 }
 
-void AAGGameMode::OnSessionTimeUpdate(float Time)
+void AAGGameMode::OnSessionTimeUpdate(const float Time)
 {
 	CurrentGameSessionTime = Time;
 }
@@ -224,7 +222,7 @@ bool AAGGameMode::GeneratePickups()
 	}
 
 	MainRandomStream.Reset();
-	UPickupTypeDataAsset* LoadedPickupType = PurposePickupType.LoadSynchronous();
+	const UPickupTypeDataAsset* LoadedPickupType = PurposePickupType.LoadSynchronous();
 	FActorSpawnParameters Params;
 	Params.Owner = this;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

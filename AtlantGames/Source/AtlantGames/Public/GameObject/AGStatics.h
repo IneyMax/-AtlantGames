@@ -7,9 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AGStatics.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class ATLANTGAMES_API UAGStatics : public UBlueprintFunctionLibrary
 {

@@ -11,7 +11,7 @@ class AAGPlayerState;
 class UPickupTypeDataAsset;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSetMatchPurposeType, FMatchPurpose, PickupType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerScoreUpdate, AAGPlayerState*, PlayerState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerScoreUpdate, AAGPlayerState*, PlayerState, int32, NewScore);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTotalScoreUpdate, int32, NewTotalScore);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionTimeUpdate, float, Time);
 
@@ -42,10 +42,11 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
-	virtual void HandleMatchHasEnded() override;
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void PlayerIncreaseScore_Server(AAGPlayerState* InPlayerState, int32 InAddScore);
 	
-	UFUNCTION(NetMulticast, Unreliable, BlueprintCallable)
-	void PlayerScoreUpdate_Multicast(AAGPlayerState* InPlayerState, int32 InAddScore);
+	UFUNCTION(NetMulticast, Unreliable)
+	void PlayerScoreUpdate_Multicast(AAGPlayerState* InPlayerState, int32 NewScore);
 	
 	UFUNCTION(BlueprintPure)
     FMatchPurpose GetMatchPurpose() const;

@@ -3,6 +3,7 @@
 
 #include "Core/AGGameState.h"
 
+#include "Core/Player/AGPlayerState.h"
 #include "Net/UnrealNetwork.h"
 #include "Net/Core/PushModel/PushModel.h"
 
@@ -41,13 +42,6 @@ void AAGGameState::Tick(float DeltaSeconds)
 	}
 }
 
-void AAGGameState::HandleMatchHasEnded()
-{
-	Super::HandleMatchHasEnded();
-
-	
-}
-
 void AAGGameState::SetMatchPurpose(const FMatchPurpose& InPurpose)
 {
 	MARK_PROPERTY_DIRTY_FROM_NAME(AAGGameState, Purpose, this);
@@ -58,7 +52,7 @@ void AAGGameState::SetMatchPurpose(const FMatchPurpose& InPurpose)
 	}
 }
 
-void AAGGameState::SetGameSessionTime(float InGameSessionTime)
+void AAGGameState::SetGameSessionTime(const float InGameSessionTime)
 {
 	MARK_PROPERTY_DIRTY_FROM_NAME(AAGGameState, Purpose, this);
 	GameSessionTime = InGameSessionTime;
@@ -68,11 +62,17 @@ void AAGGameState::SetGameSessionTime(float InGameSessionTime)
 	}
 }
 
-void AAGGameState::PlayerScoreUpdate_Multicast_Implementation(AAGPlayerState* InPlayerState, int32 InAddScore)
+void AAGGameState::PlayerIncreaseScore_Server_Implementation(AAGPlayerState* InPlayerState, const int32 InAddScore)
 {
-	OnPlayerScoreUpdate.Broadcast(InPlayerState);
+	InPlayerState->IncreaseScore(InAddScore);
 	TotalScore += InAddScore;
 	OnTotalScoreUpdate.Broadcast(TotalScore);
+	PlayerScoreUpdate_Multicast(InPlayerState, InPlayerState->GetCurrentScore());
+}
+
+void AAGGameState::PlayerScoreUpdate_Multicast_Implementation(AAGPlayerState* InPlayerState, const int32 NewScore)
+{
+	OnPlayerScoreUpdate.Broadcast(InPlayerState, NewScore);
 }
 
 void AAGGameState::OnRep_Purpose()

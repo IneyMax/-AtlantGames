@@ -6,7 +6,10 @@
 #include "GameFramework/Pawn.h"
 #include "AGPawn.generated.h"
 
-
+/*
+ * Простая реализация мувмента.
+ * Не использовал CharacterMovementComponent, т.к. не хотелось тянуть в тестовый проект полноценного Character'а
+ */
 UCLASS()
 class ATLANTGAMES_API AAGPawn : public APawn
 {

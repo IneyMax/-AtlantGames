@@ -29,6 +29,7 @@ public:
 	virtual void StartMatch() override;
 	virtual void HandleMatchHasEnded() override;
 	virtual void HandleLeavingMap() override;
+	/* Override for preventing spawn at 1 start point*/
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	virtual bool ReadyToStartMatch_Implementation() override;
 	virtual bool ReadyToEndMatch_Implementation() override;
@@ -84,3 +85,8 @@ private:
 	float CurrentGameSessionTime;
 	int32 TotalScore = 0.f;
 };
+
+FORCEINLINE bool AAGGameMode::ReadyToEndMatch_Implementation()
+{
+	return TotalScore >= NumPurposePickup || CurrentGameSessionTime <= 0;
+}

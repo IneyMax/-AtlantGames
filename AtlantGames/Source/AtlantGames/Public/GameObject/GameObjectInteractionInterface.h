@@ -15,7 +15,8 @@ class UGameObjectInteractionInterface : public UInterface
 
 
 /**
- * 
+ * Т.к. в данном случае, у интерактивных объектов очень простое поведение - реализовано взаимодействие с помощью интерфейса.
+ * На практике, предпочтение будет скорее за взаимодействием с помощью компонентов
  */
 class ATLANTGAMES_API IGameObjectInteractionInterface
 {

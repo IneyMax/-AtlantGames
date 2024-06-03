@@ -31,7 +31,7 @@ void AAGPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	DOREPLIFETIME_WITH_PARAMS_FAST(AAGPawn, MovementDirection, SharedParams);
 }
 
-void AAGPawn::SetMovementDirection_Implementation(FVector2D NewMovementDirection)
+void AAGPawn::SetMovementDirection_Implementation(const FVector2D NewMovementDirection)
 {
 	MARK_PROPERTY_DIRTY_FROM_NAME(AAGPawn, MovementDirection, this);
 	MovementDirection = NewMovementDirection;

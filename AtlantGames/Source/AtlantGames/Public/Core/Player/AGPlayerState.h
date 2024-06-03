@@ -20,18 +20,18 @@ public:
 
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void OnRep_Score() override;
 
+public:
 	UFUNCTION(BlueprintPure)
 	int32 GetCurrentScore() const;
 	
-	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void IncreaseScore(int32 InAddScore);
 
 protected:
 	UPROPERTY(ReplicatedUsing=OnRep_Score)
 	int32 CurrentScore;
-	
-	virtual void OnRep_Score() override;
 };
 
 FORCEINLINE int32 AAGPlayerState::GetCurrentScore() const

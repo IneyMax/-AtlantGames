@@ -28,6 +28,7 @@ public:
 	virtual void OnRep_PlayerState() override;
 	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
 
+public:
 	UFUNCTION(Client, Reliable)
 	void GameHasEnded_Client(AActor* EndGameFocus, bool bIsWinner);
 };
